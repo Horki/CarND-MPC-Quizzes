@@ -11,14 +11,16 @@ set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
 set(sources src/MPC.cpp src/main.cpp)
 
-include_directories(src/Eigen-3.3)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
 add_executable(mpc ${sources})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-target_link_libraries(mpc ipopt python2.7)
+  target_link_libraries(mpc ipopt python2.7 ${CONAN_LIBS})
 else()
-target_link_libraries(mpc ipopt python)
+  target_link_libraries(mpc ipopt python ${CONAN_LIBS})
 endif()
