@@ -1,22 +1,34 @@
-project(q1)
+cmake_minimum_required(VERSION 3.5)
 
-cmake_minimum_required (VERSION 3.5)
+project(global_kinematic_model CXX)
 
 # -g allows for gdb debugging
 # turn on -03 for best performance
-add_definitions(-std=c++17)
+add_definitions(-std=c++11)
 
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
-set(sources src/main.cpp)
+enable_testing()
+add_subdirectory(test)
+
+set(sources include/kinematic.hpp src/kinematic.cpp)
+add_library(kinematic ${sources})
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
+# include_directories(/usr/local/include)
+# link_directories(/usr/local/lib)
 
-add_executable(global_kinematic_model ${sources})
+target_include_directories(kinematic
+  PUBLIC
+  ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(global_kinematic_model ${CONAN_LIBS})
+add_executable(${PROJECT_NAME} src/main.cpp)
+
+target_link_libraries(${PROJECT_NAME}
+  kinematic
+  ${CONAN_LIBS}
+)
+
