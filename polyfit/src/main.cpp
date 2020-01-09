@@ -1,15 +1,8 @@
 // In this quiz you'll fit a polynomial to waypoints.
 
 #include <iostream>
-#include "Eigen-3.3/Eigen/Core"
-#include "Eigen-3.3/Eigen/QR"
-
-using Eigen::VectorXd;
-
-// Evaluate a polynomial.
-double polyeval(const VectorXd &coeffs, double x);
-// Fit a polynomial.
-VectorXd polyfit(const VectorXd &xvals, const VectorXd &yvals, int order);
+#include <polynomial.hpp>
+#include <iomanip>
 
 int main() {
   VectorXd xvals(6);
@@ -20,18 +13,25 @@ int main() {
   yvals << 5.17, -2.25, -15.306, -29.46, -42.85, -57.6116;
 
   /**
-   * TODO: use `polyfit` to fit a third order polynomial to the (x, y)
+   * Use `polyfit` to fit a third order polynomial to the (x, y)
    *   coordinates.
-   * Hint: call Eigen::VectorXd polyfit() and pass xvals, yvals, and the 
+   * Hint: call Eigen::VectorXd polyfit() and pass xvals, yvals, and the
    *   polynomial degree/order
    */
-  // YOUR CODE HERE
+  // Pass the x and y waypoint coordinates along the order of the polynomial.
+  //   In this case, 3.
+  VectorXd coeffs = polyfit(xvals, yvals, 3);
+  VectorXd aaa(3);
+  aaa << 1.0, 2.0, 3.0;
+  double rr = polyeval(aaa, 3.0);
+  std::cout << std::setprecision(2222) << "res: " << rr << std::endl;
 
-  for (double x = 0; x <= 20; ++x) {
-    /**
-     * TODO: use `polyeval` to evaluate the x values.
-     */
-    std::cout << "YOUR CODE HERE" << std::endl; 
+  // NOTE: use STL iterators, when Eigen 3.3.9 becomes stable
+  for (double x = 0.0; x <= 20.0; ++x) {
+    // We can evaluate the polynomial at a x coordinate by calling `polyeval`.
+    //   The first argument being the coefficients, `coeffs`.
+    //   The second being the x coordinate, `x`.
+    std::cout << polyeval(coeffs, x) << std::endl;
   }
 
   // Expected output
@@ -58,34 +58,3 @@ int main() {
   // 11.7925
 }
 
-double polyeval(const VectorXd &coeffs, double x) {
-  double result = 0.0;
-  for (int i = 0; i < coeffs.size(); ++i) {
-    result += coeffs[i] * pow(x, i);
-  }
-  return result;
-}
-
-// Adapted from:
-// https://github.com/JuliaMath/Polynomials.jl/blob/master/src/Polynomials.jl#L676-L716
-VectorXd polyfit(const VectorXd &xvals, const VectorXd &yvals, int order) {
-  assert(xvals.size() == yvals.size());
-  assert(order >= 1 && order <= xvals.size() - 1);
-
-  Eigen::MatrixXd A(xvals.size(), order + 1);
-
-  for (int i = 0; i < xvals.size(); ++i) {
-    A(i, 0) = 1.0;
-  }
-
-  for (int j = 0; j < xvals.size(); ++j) {
-    for (int i = 0; i < order; ++i) {
-      A(j, i + 1) = A(j, i) * xvals(j);
-    }
-  }
-
-  auto Q = A.householderQr();
-  auto result = Q.solve(yvals);
-
-  return result;
-}
