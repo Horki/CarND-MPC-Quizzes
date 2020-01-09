@@ -1,5 +1,5 @@
 #include <vector>
-#include "Eigen-3.3/Eigen/QR"
+#include <Eigen/QR>
 #include "helpers.h"
 #include "matplotlibcpp.h"
 #include "MPC.h"
@@ -7,75 +7,64 @@
 namespace plt = matplotlibcpp;
 
 using Eigen::VectorXd;
-using std::cout;
-using std::endl;
-using std::vector;
 
 int main() {
   MPC mpc;
-  int iters = 50;
+  size_t iters = 50;
 
   VectorXd ptsx(2);
   VectorXd ptsy(2);
   ptsx << -100, 100;
   ptsy << -1, -1;
-
   /**
-   * TODO: fit a polynomial to the above x and y coordinates
+   * Polynomial is fitted to a straight line, so a polynomial with
+   *   order 1 is sufficient.
    */
-  auto coeffs = ? ;
-
+  auto coeffs = polyfit(ptsx, ptsy, 1);
   // NOTE: free feel to play around with these
-  double x = -1;
-  double y = 10;
+  double x   = -1;
+  double y   = 10;
   double psi = 0;
-  double v = 10;
-  /**
-   * TODO: calculate the cross track error
-   */
-  double cte = ? ;
-  /**
-   * TODO: calculate the orientation error
-   */
-  double epsi = ? ;
-
+  double v   = 10;
+  // The cross track error is calculated by evaluating at polynomial at x, f(x)
+  // and subtracting y.
+  double cte = polyeval(coeffs, x) - y;
+  // Due to the sign starting at 0, the orientation error is -f'(x).
+  // derivative of coeffs[0] + coeffs[1] * x -> coeffs[1]
+  double epsi = psi - atan(coeffs[1]);
   VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
-
-  vector<double> x_vals = {state[0]};
-  vector<double> y_vals = {state[1]};
-  vector<double> psi_vals = {state[2]};
-  vector<double> v_vals = {state[3]};
-  vector<double> cte_vals = {state[4]};
-  vector<double> epsi_vals = {state[5]};
-  vector<double> delta_vals = {};
-  vector<double> a_vals = {};
+  std::vector<double> x_vals     = {state[0]};
+  std::vector<double> y_vals     = {state[1]};
+  std::vector<double> psi_vals   = {state[2]};
+  std::vector<double> v_vals     = {state[3]};
+  std::vector<double> cte_vals   = {state[4]};
+  std::vector<double> epsi_vals  = {state[5]};
+  std::vector<double> delta_vals = {};
+  std::vector<double> a_vals     = {};
 
   for (size_t i = 0; i < iters; ++i) {
-    cout << "Iteration " << i << endl;
-
+    std::cout << "Iteration " << i << std::endl;
     auto vars = mpc.Solve(state, coeffs);
-
     x_vals.push_back(vars[0]);
     y_vals.push_back(vars[1]);
     psi_vals.push_back(vars[2]);
     v_vals.push_back(vars[3]);
     cte_vals.push_back(vars[4]);
     epsi_vals.push_back(vars[5]);
-
     delta_vals.push_back(vars[6]);
     a_vals.push_back(vars[7]);
 
     state << vars[0], vars[1], vars[2], vars[3], vars[4], vars[5];
-    cout << "x = " << vars[0] << endl;
-    cout << "y = " << vars[1] << endl;
-    cout << "psi = " << vars[2] << endl;
-    cout << "v = " << vars[3] << endl;
-    cout << "cte = " << vars[4] << endl;
-    cout << "epsi = " << vars[5] << endl;
-    cout << "delta = " << vars[6] << endl;
-    cout << "a = " << vars[7] << endl;
-    cout << endl;
+    std::cout << "x = "     << vars[0] << std::endl;
+    std::cout << "y = "     << vars[1] << std::endl;
+    std::cout << "psi = "   << vars[2] << std::endl;
+    std::cout << "v = "     << vars[3] << std::endl;
+    std::cout << "cte = "   << vars[4] << std::endl;
+    std::cout << "epsi = "  << vars[5] << std::endl;
+    std::cout << "delta = " << vars[6] << std::endl;
+    std::cout << "a = "     << vars[7] << std::endl;
+    std::cout << std::endl;
   }
 
   // Plot values
@@ -91,5 +80,7 @@ int main() {
   plt::title("Velocity");
   plt::plot(v_vals);
 
-  plt::show();
+  plt::show(); // NOTE: Why is show not working
+  plt::save("result.png");
+  std::cout << "saved to result.png\n";
 }
