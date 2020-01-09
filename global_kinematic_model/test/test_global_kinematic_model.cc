@@ -3,8 +3,6 @@
 #include <Eigen/Core>
 
 TEST(KinematicTest, test_pi) {
-  // using Eigen::VectorXd;
-  // EXPECT_TRUE(true);
   EXPECT_EQ(pi(), M_PI) << "Pi is wrong";
 }
 
