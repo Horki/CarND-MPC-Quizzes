@@ -1,9 +1,7 @@
-#include "MPC.h"
-#include <math.h>
+#include <MPC.hpp>
+#include <cmath>
 #include <cppad/cppad.hpp>
 #include <cppad/ipopt/solve.hpp>
-#include <vector>
-#include <Eigen/Core>
 
 using CppAD::AD;
 using Eigen::VectorXd;
@@ -252,7 +250,7 @@ std::vector<double> MPC::Solve(const VectorXd & x0, const VectorXd & coeffs) {
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
   auto cost = solution.obj_value;
-  // std::cout << "Cost " << cost << std::endl;
+  std::cout << "Cost " << cost << std::endl;
   return {solution.x[x_start + 1],   solution.x[y_start + 1],
           solution.x[psi_start + 1], solution.x[v_start + 1],
           solution.x[cte_start + 1], solution.x[epsi_start + 1],

@@ -1,8 +1,9 @@
 #include <vector>
 #include <Eigen/QR>
-#include "helpers.h"
-#include "matplotlibcpp.h"
-#include "MPC.h"
+#include <helpers.hpp>
+#include <matplotlibcpp.hpp>
+#include <MPC.hpp>
+#include <iomanip>
 
 namespace plt = matplotlibcpp;
 
@@ -10,7 +11,7 @@ using Eigen::VectorXd;
 
 int main() {
   MPC mpc;
-  size_t iters = 50;
+  size_t iters = 1;
 
   VectorXd ptsx(2);
   VectorXd ptsy(2);
@@ -20,7 +21,7 @@ int main() {
    * Polynomial is fitted to a straight line, so a polynomial with
    *   order 1 is sufficient.
    */
-  auto coeffs = polyfit(ptsx, ptsy, 1);
+  VectorXd coeffs = polyfit(ptsx, ptsy, 1);
   // NOTE: free feel to play around with these
   double x   = -1;
   double y   = 10;
@@ -45,7 +46,7 @@ int main() {
 
   for (size_t i = 0; i < iters; ++i) {
     std::cout << "Iteration " << i << std::endl;
-    auto vars = mpc.Solve(state, coeffs);
+    std::vector<double> vars = mpc.Solve(state, coeffs);
     x_vals.push_back(vars[0]);
     y_vals.push_back(vars[1]);
     psi_vals.push_back(vars[2]);
@@ -56,6 +57,7 @@ int main() {
     a_vals.push_back(vars[7]);
 
     state << vars[0], vars[1], vars[2], vars[3], vars[4], vars[5];
+    std::cout << std::setprecision(333);
     std::cout << "x = "     << vars[0] << std::endl;
     std::cout << "y = "     << vars[1] << std::endl;
     std::cout << "psi = "   << vars[2] << std::endl;
