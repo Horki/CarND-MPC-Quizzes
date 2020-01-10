@@ -20,7 +20,6 @@ int main() {
   // Pass the x and y waypoint coordinates along the order of the polynomial.
   //   In this case, 3.
   VectorXd coeffs = polyfit(xvals, yvals, 3);
-  VectorXd aaa(3);
 
   // NOTE: use STL iterators, when Eigen 3.3.9 becomes stable
   for (double x = 0.0; x <= 20.0; ++x) {
