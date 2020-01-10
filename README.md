@@ -29,3 +29,17 @@ you'll have to install Ipopt and CppAD.  Please refer to [this document](https:/
 ```sh
 packer -S cppad coin-or-ipopt
 ```
+
+### Os X install dependencies with brew
+
+```sh
+# CppAd
+brew install cppad
+# Ipopt
+brew update
+brew install bash gcc
+brew link --overwrite gcc
+brew install pkg-config
+brew install gfortran
+brew install ipopt
+```
