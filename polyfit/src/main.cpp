@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <polynomial.hpp>
-#include <iomanip>
 
 int main() {
   VectorXd xvals(6);
@@ -22,9 +21,6 @@ int main() {
   //   In this case, 3.
   VectorXd coeffs = polyfit(xvals, yvals, 3);
   VectorXd aaa(3);
-  aaa << 1.0, 2.0, 3.0;
-  double rr = polyeval(aaa, 3.0);
-  std::cout << std::setprecision(2222) << "res: " << rr << std::endl;
 
   // NOTE: use STL iterators, when Eigen 3.3.9 becomes stable
   for (double x = 0.0; x <= 20.0; ++x) {
