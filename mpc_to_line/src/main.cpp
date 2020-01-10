@@ -11,7 +11,7 @@ using Eigen::VectorXd;
 
 int main() {
   MPC mpc;
-  size_t iters = 1;
+  size_t iters = 50;
 
   VectorXd ptsx(2);
   VectorXd ptsy(2);
