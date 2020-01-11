@@ -3,21 +3,21 @@
 #include <Eigen/Core>
 
 TEST(KinematicTest, test_pi) {
-  EXPECT_EQ(pi(), M_PI) << "Pi is wrong";
+  EXPECT_DOUBLE_EQ(pi(), M_PI) << "Pi is wrong";
 }
 
 TEST(KinematicTest, test_deg2rad) {
   double deg = 45.;
   double rad = deg2rad(deg);
   double should_be = 0.78539816339744827899949086713604629039764404296875;
-  EXPECT_EQ(rad, should_be) << "deg2rad FAIL";
+  EXPECT_DOUBLE_EQ(rad, should_be) << "deg2rad FAIL";
 }
 
 TEST(KinematicTest, test_rad2deg) {
   double rad = 0.78539816339744827899949086713604629039764404296875;
   double deg = rad2deg(rad);
   double should_be = 45.;
-  EXPECT_EQ(deg, should_be) << "rad2deg FAIL";
+  EXPECT_DOUBLE_EQ(deg, should_be) << "rad2deg FAIL";
 }
 
 TEST(KinematicTest, test_globalKinematic) {
@@ -35,5 +35,8 @@ TEST(KinematicTest, test_globalKinematic) {
 
   VectorXd next_state = globalKinematic(state, actuators, 0.3);
 
-  EXPECT_EQ(next_state, should_be) << "Next state FAIL";
+  EXPECT_EQ(next_state.size(), should_be.size()) << "Next state FAIL";
+  for (auto i = 0; i < should_be.size(); ++i) {
+    EXPECT_DOUBLE_EQ(next_state(i), should_be(i)) << "Not equal at" << i;
+  }
 }

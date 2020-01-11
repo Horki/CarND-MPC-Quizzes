@@ -12,23 +12,22 @@ set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 enable_testing()
 add_subdirectory(test)
 
-set(sources include/kinematic.hpp src/kinematic.cpp)
-add_library(kinematic ${sources})
-
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-# include_directories(/usr/local/include)
-# link_directories(/usr/local/lib)
-
+set(sources src/kinematic.cpp)
+add_library(kinematic SHARED ${sources})
+target_link_libraries(kinematic ${CONAN_LIBS_EIGEN})
 target_include_directories(kinematic
   PUBLIC
   ${PROJECT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-
 target_link_libraries(${PROJECT_NAME}
   kinematic
-  ${CONAN_LIBS}
-)
+  ${CONAN_LIBS_EIGEN})
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+  ${PROJECT_SOURCE_DIR}/include)
 
