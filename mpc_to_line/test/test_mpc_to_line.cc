@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <MPC.hpp>
+#include <Eigen/Core>
 
 TEST(DISABLED_HelpersTest, test_polyeval) {
   ASSERT_TRUE(false) << "Done in polyfit test";

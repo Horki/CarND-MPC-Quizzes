@@ -12,19 +12,21 @@ set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 enable_testing()
 add_subdirectory(test)
 
-add_library(mpc include/MPC.hpp include/helpers.hpp src/MPC.cpp)
-
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+add_library(mpc SHARED src/MPC.cpp)
+target_link_libraries(mpc ${CONAN_LIB_EIGEN})
 target_include_directories(mpc
   PUBLIC
   ${PROJECT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  target_link_libraries(${PROJECT_NAME} mpc ipopt python2.7 ${CONAN_LIBS})
+  target_link_libraries(${PROJECT_NAME} mpc ipopt python2.7 ${CONAN_LIBS_EIGEN})
 else()
-  target_link_libraries(${PROJECT_NAME} mpc ipopt python ${CONAN_LIBS})
+  target_link_libraries(${PROJECT_NAME} mpc ipopt python ${CONAN_LIBS_EIGEN})
 endif()
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+  ${PROJECT_SOURCE_DIR}/include)
