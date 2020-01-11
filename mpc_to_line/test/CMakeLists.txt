@@ -11,9 +11,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_executable(${PROJECT_NAME} ${sources})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  target_link_libraries(${PROJECT_NAME} PUBLIC mpc ipopt python2.7 ${CONAN_LIBS})
+  target_link_libraries(${PROJECT_NAME} mpc ipopt python2.7 ${CONAN_LIBS})
 else()
-  target_link_libraries(${PROJECT_NAME} PUBLIC mpc ipopt python ${CONAN_LIBS})
+  target_link_libraries(${PROJECT_NAME} mpc ipopt python ${CONAN_LIBS})
 endif()
 
 add_test(
