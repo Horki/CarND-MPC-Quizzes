@@ -18,7 +18,7 @@ TEST(PolyfitTest, test_polyfit) {
   ASSERT_EQ(coeffs.size(), res.size()) << "coeffs and res_1 are not same size";
 
   for (auto i = 0; i < coeffs.size(); ++i) {
-    ASSERT_EQ(coeffs(i), res(i)) << "coeffs(" << i << ") error";
+    ASSERT_DOUBLE_EQ(coeffs(i), res(i)) << "coeffs(" << i << ") error";
   }
 }
 
@@ -27,7 +27,7 @@ TEST(PolyfitTest, test_polyeval) {
   double should_be = 34.0;
   test << 1.0, 2.0, 3.0;
   double result = polyeval(test, 3.0);
-  ASSERT_EQ(result, should_be);
+  ASSERT_DOUBLE_EQ(result, should_be);
 }
 
 TEST(PolyfitTest, test_polyfit_and_polyeval) {
@@ -65,6 +65,6 @@ TEST(PolyfitTest, test_polyfit_and_polyeval) {
 
   for (auto i = 0; i < double(res.size()); ++i) {
     double r = polyeval(coeffs, i);
-    ASSERT_EQ(r, res(i)) << "polyeval(" << i << ") error";
+    ASSERT_DOUBLE_EQ(r, res(i)) << "polyeval(" << i << ") error";
   }
 }

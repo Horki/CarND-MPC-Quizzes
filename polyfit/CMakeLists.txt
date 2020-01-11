@@ -11,19 +11,21 @@ set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 enable_testing()
 add_subdirectory(test)
 
-set(sources include/polynomial.hpp src/polynomial.cpp)
-add_library(polynomial ${sources})
-
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+set(sources src/polynomial.cpp)
+add_library(polynomial SHARED ${sources})
+target_link_libraries(polynomial ${CONAN_LIBS_EIGEN})
 target_include_directories(polynomial
   PUBLIC
   ${PROJECT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-
 target_link_libraries(${PROJECT_NAME}
   polynomial
-  ${CONAN_LIBS}
+  ${CONAN_LIBS_EIGEN}
 )
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+  ${PROJECT_SOURCE_DIR}/include)
